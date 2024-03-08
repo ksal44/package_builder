@@ -57,6 +57,7 @@ const PackagePage = () => {
         setSilverResult(buildSilverPackage(ageParsed, relationshipStatus, budgetParsed, ...pricingTables));
         setGoldResult(buildGoldPackage(ageParsed, relationshipStatus, budgetParsed, ...pricingTables));
         setDiamondResult(buildDiamondPackage(ageParsed, relationshipStatus, budgetParsed, ...pricingTables));
+        console.log(currentCoverage)
     };
 
 
