@@ -59,27 +59,85 @@ function buildCustomPackage(age, relationshipStatus, budget, ...pricingTables) {
   };
 }
 
+
+// function buildBronzePackage(age, relationshipStatus, ...pricingTables) {
+//   let policyPackage = [];
+//   let totalCost = 0;
+
+//   // Filter the pricingTables array to include only the specified policies
+//   const filteredPricingTables = pricingTables.filter(table =>
+//     table.name === 'Cancer Base Policy' ||
+//     table.name === 'Accident 2' || 
+//     table.name === 'Heart & Stroke Base Policy');
+
+//   // Iterate over the filtered pricing tables
+//   filteredPricingTables.forEach(table => {
+//     const price = getPriceForPolicy(age, relationshipStatus, table);
+//     const finalPrice = (table.name === 'Accident 2') ? price : price * 2; // Double the price except for 'Accident 2'
+    
+//     policyPackage.push({
+//       policy: table.name,
+//       basePrice: price, // Saving the base price
+//       finalPrice: finalPrice // The adjusted final price
+//     });
+    
+//     totalCost += finalPrice;
+//   });
+
+//   return {
+//     totalCost: totalCost,
+//     policies: policyPackage
+//   };
+// }
+
+// function buildBronzePackage(age, relationshipStatus, ...pricingTables) {
+//   let policyPackage = [];
+//   let totalCost = 0;
+
+//   const filteredPricingTables = pricingTables.filter(table =>
+//     table.name === 'Cancer Base Policy' ||
+//     table.name === 'Accident 2' || 
+//     table.name === 'Heart & Stroke Base Policy');
+
+//   filteredPricingTables.forEach(table => {
+//     const price = getPriceForPolicy(age, relationshipStatus, table);
+//     if (price > 0) {
+//       const finalPrice = (table.name === 'Accident 2') ? price : price * 2;
+//       policyPackage.push({
+//         policy: table.name,
+//         price: finalPrice,
+//       });
+//       totalCost += finalPrice;
+//     }
+//   });
+
+//   return {
+//     totalCost: totalCost,
+//     policies: policyPackage
+//   };
+// }
+
 function buildBronzePackage(age, relationshipStatus, ...pricingTables) {
   let policyPackage = [];
   let totalCost = 0;
 
-  // Filter the pricingTables array to include only the specified policies
   const filteredPricingTables = pricingTables.filter(table =>
     table.name === 'Cancer Base Policy' ||
     table.name === 'Accident 2' || 
     table.name === 'Heart & Stroke Base Policy');
 
-  // Iterate over the filtered pricing tables
   filteredPricingTables.forEach(table => {
-    const price = getPriceForPolicy(age, relationshipStatus, table);
-    if (price > 0) {
-      const finalPrice = (table.name === 'Accident 2') ? price : price * 2;
-      policyPackage.push({
-        policy: table.name,
-        price: finalPrice
-      });
-      totalCost += finalPrice;
-    }
+    const basePrice = getPriceForPolicy(age, relationshipStatus, table); // This is the original price before doubling
+    const finalPrice = (table.name === 'Accident 2') ? basePrice : basePrice * 2; // Apply doubling only for specific policies
+
+    // Push both basePrice and finalPrice into the policyPackage array
+    policyPackage.push({
+      policy: table.name,
+      basePrice: basePrice, // Save the base price for later use
+      price: finalPrice, // Save the final price (doubled base price for applicable policies)
+    });
+
+    totalCost += finalPrice;
   });
 
   return {
@@ -87,8 +145,6 @@ function buildBronzePackage(age, relationshipStatus, ...pricingTables) {
     policies: policyPackage
   };
 }
-
-
 
 function buildSilverPackage(age, relationshipStatus, ...pricingTables) {
   let policyPackage = [];
@@ -100,15 +156,16 @@ function buildSilverPackage(age, relationshipStatus, ...pricingTables) {
     table.name === 'Heart & Stroke Base Policy');
 
   filteredPricingTables.forEach(table => {
-    const price = getPriceForPolicy(age, relationshipStatus, table);
-    if (price > 0) {
-      const finalPrice = (table.name === 'Accident 2') ? price : price * 5;
-      policyPackage.push({
-        policy: table.name,
-        price: finalPrice
-      });
-      totalCost += finalPrice;
-    }
+    const basePrice = getPriceForPolicy(age, relationshipStatus, table); 
+    const finalPrice = (table.name === 'Accident 2') ? basePrice : basePrice * 5; 
+
+    policyPackage.push({
+      policy: table.name,
+      basePrice: basePrice, 
+      price: finalPrice, 
+    });
+
+    totalCost += finalPrice;
   });
 
   return {
@@ -128,23 +185,24 @@ function buildGoldPackage(age, relationshipStatus, ...pricingTables) {
     table.name === 'Accident 2' || 
     table.name === 'Heart & Stroke Base Policy');
 
-  filteredPricingTables.forEach(table => {
-    const price = getPriceForPolicy(age, relationshipStatus, table);
-    if (price > 0) {
-      const finalPrice = (table.name === 'Accident 2') ? price : price * 10;
+    filteredPricingTables.forEach(table => {
+      const basePrice = getPriceForPolicy(age, relationshipStatus, table); 
+      const finalPrice = (table.name === 'Accident 2') ? basePrice : basePrice * 10; 
+  
       policyPackage.push({
         policy: table.name,
-        price: finalPrice
+        basePrice: basePrice, 
+        price: finalPrice, 
       });
+  
       totalCost += finalPrice;
-    }
-  });
-
-  return {
-    totalCost: totalCost,
-    policies: policyPackage
-  };
-}
+    });
+  
+    return {
+      totalCost: totalCost,
+      policies: policyPackage
+    };
+  }
 
 
 function buildDiamondPackage(age, relationshipStatus, ...pricingTables) {
@@ -156,23 +214,24 @@ function buildDiamondPackage(age, relationshipStatus, ...pricingTables) {
     table.name === 'Accident 2' || 
     table.name === 'Heart & Stroke Base Policy');
 
-  filteredPricingTables.forEach(table => {
-    const price = getPriceForPolicy(age, relationshipStatus, table);
-    if (price > 0) {
-      const finalPrice = (table.name === 'Accident 2') ? price : price * 15;
+    filteredPricingTables.forEach(table => {
+      const basePrice = getPriceForPolicy(age, relationshipStatus, table); 
+      const finalPrice = (table.name === 'Accident 2') ? basePrice : basePrice * 15; 
+  
       policyPackage.push({
         policy: table.name,
-        price: finalPrice
+        basePrice: basePrice, 
+        price: finalPrice, 
       });
+  
       totalCost += finalPrice;
-    }
-  });
-
-  return {
-    totalCost: totalCost,
-    policies: policyPackage
-  };
-}
+    });
+  
+    return {
+      totalCost: totalCost,
+      policies: policyPackage
+    };
+  }
 
 
 export {

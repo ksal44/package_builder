@@ -77,10 +77,10 @@ const PackagePage = () => {
         return (
             <div className={`package-result ${packageName.toLowerCase()}`}>
                 <h2>{packageName} Package</h2>
-                <p>Total Cost: ${result.totalCost.toFixed(2)}</p>
+                <p>Total Cost: ${result.totalCost ? result.totalCost.toFixed(2) : '0.00'}</p>
                 <ul>
                     {result.policies.map((policy, index) => (
-                        <li key={`${packageName}-${index}`}>{policy.policy}: ${policy.price.toFixed(2)}</li>
+                        <li key={`${packageName}-${index}`}>{policy.policy}: ${policy.price ? policy.price.toFixed(2) : '0.00'}</li>
                     ))}
                 </ul>
             </div>
