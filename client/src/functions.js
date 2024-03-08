@@ -10,9 +10,9 @@ import {
 } from './pricingTables'
 
 
-cancerBasePolicyPricing.name = 'Cancer Base Policy';
+cancerBasePolicyPricing.name = 'Cancer Policy';
 cancerRecurrenceRiderPricing.name = 'Cancer Recurrence Rider';
-heartStrokeBasePolicyPricing.name = 'Heart & Stroke Base Policy';
+heartStrokeBasePolicyPricing.name = 'Heart & Stroke Policy';
 heartStrokeRestorationRiderPricing.name = 'Heart & Stroke Restoration Rider';
 cancerLSP1Pricing.name = 'Cancer LSP1';
 cancerLSP2Pricing.name = 'Cancer LSP2';
@@ -65,9 +65,9 @@ function buildBronzePackage(age, relationshipStatus, ...pricingTables) {
   let totalCost = 0;
 
   const filteredPricingTables = pricingTables.filter(table =>
-    table.name === 'Cancer Base Policy' ||
+    table.name === 'Cancer Policy' ||
     table.name === 'Accident 2' ||
-    table.name === 'Heart & Stroke Base Policy');
+    table.name === 'Heart & Stroke Policy');
 
   filteredPricingTables.forEach(table => {
     const basePrice = getPriceForPolicy(age, relationshipStatus, table);
@@ -93,9 +93,9 @@ function buildSilverPackage(age, relationshipStatus, ...pricingTables) {
   let totalCost = 0;
 
   const filteredPricingTables = pricingTables.filter(table =>
-    table.name === 'Cancer Base Policy' ||
+    table.name === 'Cancer Policy' ||
     table.name === 'Accident 2' ||
-    table.name === 'Heart & Stroke Base Policy');
+    table.name === 'Heart & Stroke Policy');
 
   filteredPricingTables.forEach(table => {
     const basePrice = getPriceForPolicy(age, relationshipStatus, table);
@@ -123,9 +123,9 @@ function buildGoldPackage(age, relationshipStatus, ...pricingTables) {
   let totalCost = 0;
 
   const filteredPricingTables = pricingTables.filter(table =>
-    table.name === 'Cancer Base Policy' ||
+    table.name === 'Cancer Policy' ||
     table.name === 'Accident 2' ||
-    table.name === 'Heart & Stroke Base Policy');
+    table.name === 'Heart & Stroke Policy');
 
   filteredPricingTables.forEach(table => {
     const basePrice = getPriceForPolicy(age, relationshipStatus, table);
@@ -152,9 +152,9 @@ function buildDiamondPackage(age, relationshipStatus, ...pricingTables) {
   let totalCost = 0;
 
   const filteredPricingTables = pricingTables.filter(table =>
-    table.name === 'Cancer Base Policy' ||
+    table.name === 'Cancer Policy' ||
     table.name === 'Accident 2' ||
-    table.name === 'Heart & Stroke Base Policy');
+    table.name === 'Heart & Stroke Policy');
 
   filteredPricingTables.forEach(table => {
     const basePrice = getPriceForPolicy(age, relationshipStatus, table);
@@ -177,7 +177,16 @@ function buildDiamondPackage(age, relationshipStatus, ...pricingTables) {
 
 
 function selectBestPackage(age, relationshipStatus, budget, pricingTables) {
-  // Assume each buildXPackage function returns { totalCost, policies: [{ policy, basePrice, price }] }
+  
+  // Define initial coverage levels for each package
+  const coverageLevels = {
+    Bronze: 10000,
+    Silver: 25000,
+    Gold: 50000,
+    Diamond: 75000,
+  };
+
+  // Define the packages with their build functions
   const packages = [
     { name: "Bronze", package: buildBronzePackage(age, relationshipStatus, ...pricingTables) },
     { name: "Silver", package: buildSilverPackage(age, relationshipStatus, ...pricingTables) },
@@ -185,7 +194,7 @@ function selectBestPackage(age, relationshipStatus, budget, pricingTables) {
     { name: "Diamond", package: buildDiamondPackage(age, relationshipStatus, ...pricingTables) }
   ];
 
-  // Filter, sort, and select the package as before
+  // Filter packages that fit within the budget
   const affordablePackages = packages.filter(pkg => pkg.package.totalCost <= budget);
   affordablePackages.sort((a, b) => b.package.totalCost - a.package.totalCost);
   const selectedPackage = affordablePackages[0];
@@ -193,22 +202,22 @@ function selectBestPackage(age, relationshipStatus, budget, pricingTables) {
   if (!selectedPackage) {
     return { message: "No package fits within the budget." };
   } else {
-    // Calculate the aggregate total cost of selected policies
-    const aggregatedTotalCost = selectedPackage.package.policies.reduce((acc, policy) => acc + policy.price, 0);
-
-    // Include details of each policy within the selected package
+    // Include details of each policy within the selected package, adding the initial coverage level
     const policyDetails = selectedPackage.package.policies.map(policy => {
+      const initialCoverage = coverageLevels[selectedPackage.name];
+      
       return {
         name: policy.policy,
         basePrice: policy.basePrice,
-        finalPrice: policy.price
+        finalPrice: policy.price,
+        coverageLevel: initialCoverage // Here is where the initial coverage level is set
       };
     });
 
     return {
       message: `${selectedPackage.name} Package is the best fit within your budget.`,
       selectedPackage: selectedPackage.name,
-      totalCost: aggregatedTotalCost, // Return the total cost of all policies combined
+      totalCost: selectedPackage.package.totalCost, // This should reflect the total cost directly from the selected package
       policies: policyDetails
     };
   }

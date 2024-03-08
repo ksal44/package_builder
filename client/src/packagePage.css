@@ -100,7 +100,7 @@ select {
 
 
 .package-results {
-    width: 40%; /* Set the width of the container to 35% of the screen */
+    width: 35%; /* Set the width of the container to 35% of the screen */
     display: flex;
     flex-direction: column; /* Stack children in a single column */
     align-items: center; /* Center children horizontally */
@@ -152,10 +152,10 @@ select {
 }
 
 .optimum-result {
-    width: 100%; /* Each package result takes the full width of the container */
+    width: 120%;
     margin-bottom: 20px; /* Space at the bottom of each box */
     box-sizing: border-box;
-    padding: 20px;
+    padding: 10px;
     background-color: navy; /* Navy blue background for each package result */
     color: white; /* White text for legibility */
     border-radius: 10px;
@@ -172,6 +172,7 @@ select {
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
+    font-size: 1rem;
 }
 
 .policy-details {
@@ -186,7 +187,7 @@ select {
 .button {
     cursor: pointer; /* Changes cursor to pointer on hover */
     padding: 5px 10px; /* Adjusts padding */
-    margin-right: 5px; /* Adds space between the buttons */
+    margin: 5px; /* Adds space between the buttons */
 }
 
 
@@ -196,6 +197,11 @@ select {
     clear: both;
     display: table;
 }
+
+.coverage-level {
+    margin-left: 1%;
+}
+
 
 @media (max-width: 768px) {
     .main {
