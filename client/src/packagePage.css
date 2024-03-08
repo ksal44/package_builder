@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    color: black; /* Ensuring text is legible */
+    background-color: white; /* Background color for contrast */
+}
+
+h2 {
+    text-align: center;
+}
+
+.main {
+    display: flex; /* Makes the main container a flex container */
+    justify-content: start; /* Aligns children (form and results) to the start */
+    align-items: flex-start; /* Aligns items to the start of the cross axis */
+}
+
+header {
+    background-color: navy; /* Navy blue background */
+    color: white; /* White text for legibility */
+    padding: 20px;
+    text-align: center;
+}
+
+nav ul.navbar {
+    list-style-type: none; /* Remove bullets from list */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margins */
+    background-color: rgb(61, 236, 61);
+    overflow: hidden; /* Clear floats */
+    text-align: left; /* Center navbar items */
+}
+
+nav ul.navbar li {
+    display: inline-block; /* Display items inline */
+    padding: 20px; /* Padding for navbar items */
+}
+
+nav ul.navbar li a {
+    text-decoration: none; /* No underline on links */
+    color: white; /* White text for legibility */
+}
+
+.input-form {
+    width: 25%; /* Use the full container width */
+    padding: 20px;
+    box-sizing: border-box; /* Include padding in width and height */
+    border: 2px solid #000; /* Border width and color */
+    border-radius: 10px; /* Adjust the radius to change the roundness */
+    padding: 20px;
+}
+
+.form-field {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space between label and input */
+    align-items: center; /* Align items vertically */
+    margin-bottom: 10px; /* Margin between form fields */
+}
+
+.form-label {
+    margin-right: 10px; /* Space between label and input */
+    flex: 1; /* Allow labels to grow */
+    text-align: left; /* Align label text to the left */
+}
+
+.package-results {
+    width: 70%;
+    float: right; /* Align package results to the right */
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping */
+    justify-content: space-between; /* Space out the boxes */
+}
+
+.package-result {
+    width: calc(50% - 10px); /* 2x2 grid with a little space between */
+    margin-bottom: 20px; /* Space at the bottom of each box */
+    box-sizing: border-box;
+    padding: 20px;
+    background-color: navy; /* Navy blue background for each package result */
+    color: white; /* White text for legibility */
+    border-radius: 10px; /* Adjust the radius to change the roundness */
+}
+
+.package-result h2 {
+    color: brightgreen; /* Bright green for headers */
+    font-weight: bold;
+    font-size: 1.7rem;
+}
+
+.bronze {
+    background-color: #cd7f32; /* A bronze-like color */
+    font-size: 1.2rem;
+}
+
+.silver {
+    background-color: #918f8f; /* Silver color */
+    font-size: 1.2rem;
+}
+
+.gold {
+    background-color: #c7aa03; /* Gold color */
+    font-size: 1.2rem;
+}
+
+.diamond {
+    background-color: navy; /* Navy for diamond to differentiate */
+    font-size: 1.2rem;
+}
+
+/* Clear fix for floated elements */
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+@media (max-width: 768px) {
+    .main {
+        flex-direction: column; /* Stacks the form and results vertically on smaller screens */
+    }
+    .input-form, .package-results {
+        flex: 1 0 100%; /* Resets flex-grow and specifies each should take full width */
+        margin-right: 0; /* Removes margin to the right of the form on smaller screens */
+    }
+}
+
