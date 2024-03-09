@@ -185,8 +185,8 @@ const PackagePage = () => {
                             <span className='buttons'>
                                 {policy.name !== "Accident 2" && (
                                     <>
-                                        <button className='button' onClick={() => decrementPolicyPrice(policy.name)}> dec </button>
                                         <button className='button' onClick={() => incrementPolicyPrice(policy.name)}> inc </button>
+                                        <button className='button' onClick={() => decrementPolicyPrice(policy.name)}> dec </button>
                                     </>
                                 )}
                             </span>
