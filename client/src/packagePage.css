@@ -102,10 +102,12 @@ select {
 .package-results {
     width: 35%; /* Set the width of the container to 35% of the screen */
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column; /* Stack children in a single column */
     align-items: center; /* Center children horizontally */
     margin-right: 2%;
     margin-left: 3%;
+    justify-content: space-around;
 }
 
 .package-result {
@@ -203,13 +205,52 @@ select {
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 933px) {    
     .main {
-        flex-direction: column; /* Stacks the form and results vertically on smaller screens */
+        display: flex;
+        flex-direction: column; /* Changed to column to stack elements vertically */
+        align-items: center; /* Center align the items */
+        width: 100%; /* Ensure it takes full width */
     }
-    .input-form, .package-results {
-        flex: 1 0 100%; /* Resets flex-grow and specifies each should take full width */
-        margin-right: 0; /* Removes margin to the right of the form on smaller screens */
+    
+    .form-field {
+        display: flex;
+        align-items: center; 
+        margin-bottom: 10px; 
+        justify-content: space-between;
+    }
+    
+    .form-label, input, select {
+        width: 100%; /* Full width for better alignment */
+        margin: 5px 0; /* Spacing for aesthetics */
+    }
+    
+    .pricing-guide {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center; /* Centralized text */
+    }
+    
+    .package-results {
+        display: flex;
+        flex-direction: column; /* Ensure single column layout */
+        align-items: center; /* Center align package results */
+        width: 90%;
+    }
+    
+    .package-result {
+        width: 100%; /* Each package result takes the full width */
+        margin: 10px 0; /* Adjust spacing between package results */
+        /* Other styles remain unchanged */
+    }
+
+    .optimum-result {
+        max-width: 90%;
+        align-self: center;
+        margin-right: 0%;
+        padding: 10px;
+        margin-left: 20px;
     }
 }
-
