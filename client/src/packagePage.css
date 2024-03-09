@@ -205,7 +205,7 @@ select {
 }
 
 
-@media (max-width: 933px) {    
+@media (max-width: 1024px) {    
     .main {
         display: flex;
         flex-direction: column; /* Changed to column to stack elements vertically */
