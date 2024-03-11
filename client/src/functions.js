@@ -1,8 +1,10 @@
 import {
   cancerBasePolicyPricing,
   cancerRecurrenceRiderPricing,
+  cancerPackagePricing,
   heartStrokeBasePolicyPricing,
   heartStrokeRestorationRiderPricing,
+  heartStrokePackagePricing,
   cancerLSP1Pricing,
   cancerLSP2Pricing,
   accidentWithWellness1Pricing,
@@ -12,8 +14,10 @@ import {
 
 cancerBasePolicyPricing.name = 'Cancer Policy';
 cancerRecurrenceRiderPricing.name = 'Cancer Recurrence Rider';
+cancerPackagePricing.name = 'Cancer Package';
 heartStrokeBasePolicyPricing.name = 'Heart & Stroke Policy';
 heartStrokeRestorationRiderPricing.name = 'Heart & Stroke Restoration Rider';
+heartStrokePackagePricing.name = 'Heart & Stroke Package';
 cancerLSP1Pricing.name = 'Cancer LSP1';
 cancerLSP2Pricing.name = 'Cancer LSP2';
 accidentWithWellness1Pricing.name = 'Accident 1';
@@ -65,9 +69,9 @@ function buildBronzePackage(age, relationshipStatus, ...pricingTables) {
   let totalCost = 0;
 
   const filteredPricingTables = pricingTables.filter(table =>
-    table.name === 'Cancer Policy' ||
+    table.name === 'Cancer Package' ||
     table.name === 'Accident 2' ||
-    table.name === 'Heart & Stroke Policy');
+    table.name === 'Heart & Stroke Package');
 
   filteredPricingTables.forEach(table => {
     const basePrice = getPriceForPolicy(age, relationshipStatus, table);
@@ -93,9 +97,9 @@ function buildSilverPackage(age, relationshipStatus, ...pricingTables) {
   let totalCost = 0;
 
   const filteredPricingTables = pricingTables.filter(table =>
-    table.name === 'Cancer Policy' ||
+    table.name === 'Cancer Package' ||
     table.name === 'Accident 2' ||
-    table.name === 'Heart & Stroke Policy');
+    table.name === 'Heart & Stroke Package');
 
   filteredPricingTables.forEach(table => {
     const basePrice = getPriceForPolicy(age, relationshipStatus, table);
@@ -123,9 +127,9 @@ function buildGoldPackage(age, relationshipStatus, ...pricingTables) {
   let totalCost = 0;
 
   const filteredPricingTables = pricingTables.filter(table =>
-    table.name === 'Cancer Policy' ||
+    table.name === 'Cancer Package' ||
     table.name === 'Accident 2' ||
-    table.name === 'Heart & Stroke Policy');
+    table.name === 'Heart & Stroke Package');
 
   filteredPricingTables.forEach(table => {
     const basePrice = getPriceForPolicy(age, relationshipStatus, table);
@@ -152,9 +156,9 @@ function buildDiamondPackage(age, relationshipStatus, ...pricingTables) {
   let totalCost = 0;
 
   const filteredPricingTables = pricingTables.filter(table =>
-    table.name === 'Cancer Policy' ||
+    table.name === 'Cancer Package' ||
     table.name === 'Accident 2' ||
-    table.name === 'Heart & Stroke Policy');
+    table.name === 'Heart & Stroke Package');
 
   filteredPricingTables.forEach(table => {
     const basePrice = getPriceForPolicy(age, relationshipStatus, table);

@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from 'react';
 import './packagePage.css';
 import { buildBronzePackage, buildSilverPackage, buildGoldPackage, buildDiamondPackage, selectBestPackage } from './functions';
-import { cancerBasePolicyPricing, cancerRecurrenceRiderPricing, heartStrokeBasePolicyPricing, heartStrokeRestorationRiderPricing, cancerLSP1Pricing, cancerLSP2Pricing, accidentWithWellness1Pricing, accidentWithWellness2Pricing } from './pricingTables';
+import { cancerBasePolicyPricing, cancerRecurrenceRiderPricing, cancerPackagePricing, heartStrokeBasePolicyPricing, heartStrokeRestorationRiderPricing, heartStrokePackagePricing, cancerLSP1Pricing, cancerLSP2Pricing, accidentWithWellness1Pricing, accidentWithWellness2Pricing } from './pricingTables';
 
 const coverageLevels = {
     Bronze: 10000,
@@ -30,8 +30,10 @@ const PackagePage = () => {
         const pricingTables = [
             cancerBasePolicyPricing,
             cancerRecurrenceRiderPricing,
+            cancerPackagePricing,
             heartStrokeBasePolicyPricing,
             heartStrokeRestorationRiderPricing,
+            heartStrokePackagePricing,
             cancerLSP1Pricing,
             cancerLSP2Pricing,
             accidentWithWellness1Pricing,
@@ -70,7 +72,7 @@ const PackagePage = () => {
                 if (policy.name === policyName && policyName !== "Accident 2") {
                     let increment = policy.basePrice;
                     let additionalCoverage = 0;
-                    if (policyName === "Cancer Policy" || policyName === "Heart & Stroke Policy") {
+                    if (policyName === "Cancer Package" || policyName === "Heart & Stroke Package") {
                         additionalCoverage = 5000;
                     }
                     return {
@@ -94,7 +96,7 @@ const PackagePage = () => {
     const decrementPolicyPrice = useCallback((policyName) => {
         setOptimumResult(currentResult => {
             const updatedPolicies = currentResult.policies.map(policy => {
-                if (policy.name === policyName && (policyName === "Cancer Policy" || policyName === "Heart & Stroke Policy")) {
+                if (policy.name === policyName && (policyName === "Cancer Package" || policyName === "Heart & Stroke Package")) {
                     // Decreasing policy's final price and adjusting coverage level if applicable
                     const decrement = policy.basePrice;
                     const reducedCoverage = Math.max(policy.coverageLevel - 5000, 0); // Ensure not decreasing below minimum
