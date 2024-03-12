@@ -1,228 +1,106 @@
-
-import React, { useState, useCallback } from 'react';
-import './packagePage.css';
+import React, { useState } from 'react';
 import { buildBronzePackage, buildSilverPackage, buildGoldPackage, buildDiamondPackage, selectBestPackage } from './functions';
-import { cancerBasePolicyPricing, cancerRecurrenceRiderPricing, cancerPackagePricing, heartStrokeBasePolicyPricing, heartStrokeRestorationRiderPricing, heartStrokePackagePricing, cancerLSP1Pricing, cancerLSP2Pricing, accidentWithWellness1Pricing, accidentWithWellness2Pricing } from './pricingTables';
-
-const coverageLevels = {
-    Bronze: 10000,
-    Silver: 25000,
-    Gold: 50000,
-    Diamond: 75000
-};
+import PackageEditor from './packageEditor';
 
 const PackagePage = () => {
+    const [state, setState] = useState('');
     const [age, setAge] = useState('');
     const [relationshipStatus, setRelationshipStatus] = useState('');
+    const [packageResults, setPackageResults] = useState([]);
+    const [bestPackageResult, setBestPackageResult] = useState(null);
     const [budget, setBudget] = useState('');
-    const [bronzeResult, setBronzeResult] = useState(null);
-    const [silverResult, setSilverResult] = useState(null);
-    const [goldResult, setGoldResult] = useState(null);
-    const [diamondResult, setDiamondResult] = useState(null);
-    const [optimumResult, setOptimumResult] = useState(null);
+    const [showEditor, setShowEditor] = useState(false); // Assuming you have a way to set budget
 
-    const [currentCoverage, setCurrentCoverage] = useState(coverageLevels.Bronze);
-
-    
-
-
-    const handlePackageBuild = () => {
-        const pricingTables = [
-            cancerBasePolicyPricing,
-            cancerRecurrenceRiderPricing,
-            cancerPackagePricing,
-            heartStrokeBasePolicyPricing,
-            heartStrokeRestorationRiderPricing,
-            heartStrokePackagePricing,
-            cancerLSP1Pricing,
-            cancerLSP2Pricing,
-            accidentWithWellness1Pricing,
-            accidentWithWellness2Pricing
+    const handleSubmit = (e) => {
+        e.preventDefault(); // Prevent the form from refreshing the page
+        
+        // Define package functions with names for easy reference
+        const packageFunctions = [
+          { func: buildBronzePackage, name: 'Bronze' },
+          { func: buildSilverPackage, name: 'Silver' },
+          { func: buildGoldPackage, name: 'Gold' },
+          { func: buildDiamondPackage, name: 'Diamond' }
         ];
 
-        const ageParsed = parseInt(age);
-        const budgetParsed = parseFloat(budget);
+        const results = packageFunctions.map(({ func, name }) => {
+          const result = func(state, parseInt(age, 10), relationshipStatus);
+          return {
+            name: name,
+            ...result
+          };
+        });
 
-        const bestPackageResult = selectBestPackage(ageParsed, relationshipStatus, budgetParsed, pricingTables);
+        // Update the state with all package results
+        setPackageResults(results);
 
-        // Check if bestPackageResult is valid before setting state
-        if (bestPackageResult && bestPackageResult.selectedPackage) {
-            setOptimumResult(bestPackageResult); // Set the result if valid
-            setCurrentCoverage(coverageLevels[bestPackageResult.selectedPackage]); // Set coverage based on the selected package
-        } else {
-            setOptimumResult(null); // Reset to null if no valid package was found
-            setCurrentCoverage(0); // Reset coverage to a default value, e.g., 0
-        }
-
-        // Update the results for each package type
-        setBronzeResult(buildBronzePackage(ageParsed, relationshipStatus, budgetParsed, ...pricingTables));
-        setSilverResult(buildSilverPackage(ageParsed, relationshipStatus, budgetParsed, ...pricingTables));
-        setGoldResult(buildGoldPackage(ageParsed, relationshipStatus, budgetParsed, ...pricingTables));
-        setDiamondResult(buildDiamondPackage(ageParsed, relationshipStatus, budgetParsed, ...pricingTables));
-        console.log(currentCoverage)
+        // Select the best package within the budget
+        const bestPackage = selectBestPackage(state, parseInt(age, 10), relationshipStatus, parseInt(budget, 10));
+        setBestPackageResult(bestPackage); // Update the state with the best package result
     };
-
-
-    // Inside your component
-
-    const incrementPolicyPrice = useCallback((policyName) => {
-        setOptimumResult(currentResult => {
-            // Directly modify currentResult without referencing optimumResult from outside
-            const updatedPolicies = currentResult.policies.map(policy => {
-                if (policy.name === policyName && policyName !== "Accident 2") {
-                    let increment = policy.basePrice;
-                    let additionalCoverage = 0;
-                    if (policyName === "Cancer Package" || policyName === "Heart & Stroke Package") {
-                        additionalCoverage = 5000;
-                    }
-                    return {
-                        ...policy,
-                        finalPrice: policy.finalPrice + increment,
-                        coverageLevel: (policy.coverageLevel || 0) + additionalCoverage
-                    };
-                }
-                return policy;
-            });
-    
-            return {
-                ...currentResult,
-                policies: updatedPolicies,
-                totalCost: updatedPolicies.reduce((acc, policy) => acc + policy.finalPrice, 0)
-            };
-        });
-    }, []); 
-    
-
-    const decrementPolicyPrice = useCallback((policyName) => {
-        setOptimumResult(currentResult => {
-            const updatedPolicies = currentResult.policies.map(policy => {
-                if (policy.name === policyName && (policyName === "Cancer Package" || policyName === "Heart & Stroke Package")) {
-                    // Decreasing policy's final price and adjusting coverage level if applicable
-                    const decrement = policy.basePrice;
-                    const reducedCoverage = Math.max(policy.coverageLevel - 5000, 0); // Ensure not decreasing below minimum
-                    return {
-                        ...policy,
-                        finalPrice: Math.max(policy.finalPrice - decrement, policy.basePrice), // Ensuring we don't go below base price
-                        coverageLevel: reducedCoverage
-                    };
-                }
-                return policy;
-            });
-    
-            return { 
-                ...currentResult, 
-                policies: updatedPolicies,
-                totalCost: updatedPolicies.reduce((acc, policy) => acc + policy.finalPrice, 0)
-            };
-        });
-    }, []); // Removed 'optimumResult' from the dependency array
-    
-
-
 
     return (
         <div>
-
-            <header>
-                <h1>Empower Insurance Group</h1>
-            </header>
-            <nav>
-                <ul className="navbar">
-                    <li>Home</li>
-                    <li>Agent Production</li>
-                    <li>Package Builder</li>
-                </ul>
-            </nav>
-            <h2>Package Builder</h2>
-            <div className='main'>
-                <div className='static'>
-                    <div className="input-form">
-                        <div className="form-field">
-                            <label className='form-label'>Age:</label>
-                            <input type="number" value={age} onChange={(e) => setAge(e.target.value)} />
-                        </div>
-                        <div className="form-field">
-                            <label className='form-label'>Relationship Status:</label>
-                            <select value={relationshipStatus} onChange={(e) => setRelationshipStatus(e.target.value)}>
-                                <option value="">Relationship Status</option>
-                                <option value="Individual">Individual</option>
-                                <option value="IndividualAndSpouse">Individual And Spouse</option>
-                                <option value="OneParent">One Parent</option>
-                                <option value="Family">Family</option>
-                            </select>
-                        </div>
-                        <div className="form-field">
-                            <label className='form-label'>Budget:</label>
-                            <input type="number" value={budget} onChange={(e) => setBudget(e.target.value)} />
-                        </div>
-                        <button onClick={handlePackageBuild}>Build Package</button>
-                    </div>
-                    <div className="pricing-guide">
-                        <p className='bronze'>Bronze Coverage = $10,000</p>
-                        <p className='silver'>Silver Coverage = $25,000</p>
-                        <p className='gold'>Gold Coverage = $50,000</p>
-                        <p className='diamond'>Diamond Coverage = $75,000</p>
-                    </div>
-                </div>
-                <div className="package-results">
-                    {renderPackageResult(bronzeResult, 'Bronze')}
-                    {renderPackageResult(silverResult, 'Silver')}
-                    {renderPackageResult(goldResult, 'Gold')}
-                    {renderPackageResult(diamondResult, 'Diamond')}
-                </div>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    value={state}
+                    onChange={(e) => setState(e.target.value.toUpperCase())}
+                    placeholder="State (e.g., TX)"
+                />
+                <input
+                    type="number"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    placeholder="Age"
+                />
+                <select value={relationshipStatus} onChange={(e) => setRelationshipStatus(e.target.value)}>
+                    <option value="" disabled>Select Relationship Status</option>
+                    <option value="Individual">Individual</option>
+                    <option value="IndividualAndSpouse">Individual And Spouse</option>
+                    <option value="OneParent">One Parent</option>
+                    <option value="Family">Family</option>
+                </select>
+                <input
+                    type="number"
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    placeholder="Budget"
+                />
+                <button type="submit">Build Packages</button>
+            </form>
+            {packageResults.length > 0 && (
                 <div>
-    {optimumResult && (
-        <div className="optimum-result">
-            <h2>Optimum Package: {optimumResult.selectedPackage}</h2>
-            <p>Total Cost: ${optimumResult.totalCost.toFixed(2)}</p>
-            <ul>
-                {optimumResult.policies.map((policy, index) => (
-                    <li key={`optimum-${index}`} className="policy-item">
-                        <div className="policy-header">
-                            {policy.name}
-                            {/* Only show coverage level for policies except "Accident 2" */}
-                            {policy.name !== "Accident 2" && policy.coverageLevel && (
-                                <span className='coverage-level'>{`Coverage Level: $${policy.coverageLevel.toLocaleString()}`}</span>
-                            )}
-                            <span className='buttons'>
-                                {policy.name !== "Accident 2" && (
-                                    <>
-                                        <button className='button' onClick={() => incrementPolicyPrice(policy.name)}> inc </button>
-                                        <button className='button' onClick={() => decrementPolicyPrice(policy.name)}> dec </button>
-                                    </>
-                                )}
-                            </span>
+                    {packageResults.map((result, index) => (
+                        <div key={index}>
+                            <h2>{result.name} Package</h2>
+                            <div>Coverage Level: ${result.coverageLevel}</div>
+                            <div>Total Cost: ${result.totalCost}</div>
+                            <ul>
+                                {result.policies.map((policy, idx) => (
+                                    <li key={idx}>{policy.policy}: Base Price - ${policy.basePrice}, Price - ${policy.price}</li>
+                                ))}
+                            </ul>
                         </div>
-                        <ul className="policy-details">
-                            <li>Base Price: ${policy.basePrice.toFixed(2)}</li>
-                            <li>Final Price: ${policy.finalPrice.toFixed(2)}</li>
-                        </ul>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    )}
-</div>
+                    ))}
+                </div>
+            )}
+            {bestPackageResult && (
+                <div>
+                    <h2>Best Package: {bestPackageResult.name}</h2>
+                    <div>Coverage Level: ${bestPackageResult.coverageLevel}</div>
+                    <div>Total Cost: ${bestPackageResult.totalCost}</div>
+                    <ul>
+                        {bestPackageResult.policies.map((policy, idx) => (
+                            <li key={idx}>{policy.policy}: Base Price - ${policy.basePrice}, Price - ${policy.price}</li>
+                        ))}
+                    </ul>
+                    <button onClick={() => setShowEditor(true)}>Edit Package</button>
+                </div>
+            )}
 
-            </div>
+            {showEditor && <PackageEditor packageDetails={bestPackageResult} onClose={() => setShowEditor(false)} state={state} relationshipStatus={relationshipStatus} age={age} />}
         </div>
     );
-
-    function renderPackageResult(result, packageName) {
-        if (!result) return null;
-        return (
-            <div className={`package-result ${packageName.toLowerCase()}`}>
-                <h2>{packageName} Package</h2>
-                <p>Total Cost: ${result.totalCost ? result.totalCost.toFixed(2) : '0.00'}</p>
-                <ul>
-                    {result.policies.map((policy, index) => (
-                        <li key={`${packageName}-${index}`}>{policy.policy}: ${policy.price ? policy.price.toFixed(2) : '0.00'}</li>
-                    ))}
-                </ul>
-            </div>
-
-        );
-    }
 };
 
 export default PackagePage;
